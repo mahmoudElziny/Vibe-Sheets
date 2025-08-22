@@ -15,7 +15,7 @@ export default function Navbar() {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <nav className="bg-gray-800 text-white p-4">
+    <nav className="bg-[#4caf50] text-white p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link to="/" className="hover:underline">
@@ -26,7 +26,7 @@ export default function Navbar() {
         {!hideLogout && (
           <button
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+            className="bg-[#166534] hover:bg-white hover:text-[#166534] px-4 py-2 rounded"
           >
             Logout
           </button>
