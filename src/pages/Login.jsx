@@ -60,14 +60,14 @@ return (
 
       <button
         type="submit"
-        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition duration-200"
+        className="w-full bg-[#4caf50] hover:bg-[#166534] text-white font-semibold py-3 rounded-lg transition duration-200"
       >
         Login
       </button>
 
       <p className="mt-4 text-sm text-center text-gray-600">
         Don’t have an account?{" "}
-        <Link to="/register" className="text-indigo-600 hover:underline">
+        <Link to="/register" className="text-[#4caf50] hover:underline">
           Register
         </Link>
       </p>

@@ -46,7 +46,7 @@ export default function Register() {
         type="email"
         {...register("email")}
         placeholder="Email"
-        className="w-full mb-3 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full mb-3 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4caf50]"
       />
       <p className="text-red-500 text-sm">{errors.email?.message}</p>
 
@@ -54,20 +54,20 @@ export default function Register() {
         type="password"
         {...register("password")}
         placeholder="Password"
-        className="w-full mb-3 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full mb-3 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4caf50]"
       />
       <p className="text-red-500 text-sm">{errors.password?.message}</p>
 
       <button
         type="submit"
-        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition duration-200"
+        className="w-full bg-[#4caf50] hover:bg-[#166534] text-white font-semibold py-3 rounded-lg transition duration-200"
       >
         Register
       </button>
 
       <p className="mt-4 text-sm text-center text-gray-600">
         Already have an account?{" "}
-        <Link to="/login" className="text-indigo-600 hover:underline">
+        <Link to="/login" className="text-[#4caf50] hover:underline">
           Login
         </Link>
       </p>
