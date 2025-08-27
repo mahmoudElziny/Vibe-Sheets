@@ -16,14 +16,18 @@ export default function Navbar() {
   const hideLogout =
     location.pathname === "/login" || location.pathname === "/register";
 
-    
-
   return (
     <nav className="bg-[#4caf50] text-white p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="p-2 rounded-4xl">
-            <img src={logo} alt="Logo" className="h-14 w-14 rounded-lg" />
+            <Link to="/">
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-14 w-14 rounded-lg cursor-pointer"
+              />
+            </Link>
           </div>
         </div>
 

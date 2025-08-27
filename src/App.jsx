@@ -28,7 +28,7 @@ export default function App() {
           }
         />
         <Route
-          path="/table/:name"
+          path="/table/:tableName"
           element={
             <ProtectedRoute>
               <TablePage />
