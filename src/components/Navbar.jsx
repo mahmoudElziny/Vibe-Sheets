@@ -22,14 +22,17 @@ export default function Navbar() {
     getUser(); // أول مرة
 
     // ✅ listener يتابع أي تغيير في حالة تسجيل الدخول
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        // مسح الاسم القديم الأول
+        setUsername("");
+
         if (session?.user) {
-          setUsername(
-            session.user.user_metadata?.username || session.user.email
-          );
-        } else {
-          setUsername("");
+          // نجيب بيانات المستخدم الجديد من supabase
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          setUsername(user?.user_metadata?.username || user?.email || "");
         }
       }
     );
