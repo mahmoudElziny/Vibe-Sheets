@@ -12,6 +12,7 @@ export default function TablePage() {
   const [loading, setLoading] = useState(true);
   const [editingRow, setEditingRow] = useState(null);
 
+
   // Fetch columns
   useEffect(() => {
     async function fetchColumns() {
@@ -75,7 +76,11 @@ export default function TablePage() {
       const payload = newRows.map((row) => {
         const cleanRow = {};
         columns.forEach((col) => {
-          if (col !== "tracking_no" && row[col] !== undefined && row[col] !== "") {
+          if (
+            col !== "tracking_no" &&
+            row[col] !== undefined &&
+            row[col] !== ""
+          ) {
             cleanRow[col] = row[col];
           }
         });
@@ -163,6 +168,7 @@ export default function TablePage() {
   };
 
   if (loading) return <p>Loading...</p>;
+console.log(columns);
 
   return (
     <div className="p-8">
@@ -173,7 +179,9 @@ export default function TablePage() {
         ← Back
       </button>
 
-      <h1 className="text-xl font-bold mb-4 bg-[#4caf50] p-4">{tableName.toUpperCase()}</h1>
+      <h1 className="text-xl font-bold mb-4 bg-[#4caf50] p-4">
+        {tableName.toUpperCase()}
+      </h1>
 
       {rows.length === 0 ? (
         <div>
@@ -189,19 +197,21 @@ export default function TablePage() {
         <>
           <table className="w-full border">
             <thead>
-  <tr className="bg-[#4caf50]">
-    {columns.map((col) => (
-      <th
-        key={col}
-        className="p-3 border text-left break-words whitespace-normal"
-        style={{ maxWidth: "150px" }}
-      >
-        {col.toUpperCase().replace(/_/g, "\n")}
-      </th>
-    ))}
-    <th className="p-3 border">Actions</th>
-  </tr>
-</thead>
+              <tr className="bg-[#4caf50]">
+                {columns.map((col) => (
+                  <th
+                    key={col}
+                    className= "px-3 py-2 border text-xs text-left break-words whitespace-normal"
+                    style={{ maxWidth: col === "tracking_no" ? "60px" : "200px", minWidth: col === "tracking_no" ? "60px" : 
+                      col === "company_name" ? "180px" : "120px"
+                    }}
+                  >
+                    {col.toUpperCase().replace(/_/g, "\n")}
+                  </th>
+                ))}
+                <th className="p-3 border">Actions</th>
+              </tr>
+            </thead>
             <tbody>
               {rows.map((row, idx) => (
                 <tr key={row.id || idx}>
@@ -212,7 +222,7 @@ export default function TablePage() {
                           type="text"
                           value={row[col] || ""}
                           disabled
-                          className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-500 text-lg"
+                          className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm"
                         />
                       ) : col.toLowerCase().includes("date") ? (
                         <input
@@ -222,7 +232,7 @@ export default function TablePage() {
                             handleChange(idx, col, e.target.value)
                           }
                           disabled={editingRow !== row.id}
-                          className="w-full border px-3 py-2 rounded text-lg"
+                          className="w-full border px-3 py-2 rounded text-xs"
                         />
                       ) : (
                         <input
@@ -232,7 +242,7 @@ export default function TablePage() {
                             handleChange(idx, col, e.target.value)
                           }
                           disabled={editingRow !== row.id}
-                          className="w-full border px-3 py-2 rounded text-lg"
+                          className="w-full border px-3 py-2 rounded text-xs"
                         />
                       )}
                     </td>
@@ -241,21 +251,21 @@ export default function TablePage() {
                     {editingRow === row.id ? (
                       <button
                         onClick={() => handleSaveRow(row)}
-                        className="bg-blue-600 text-white px-3 py-2 rounded"
+                        className="bg-blue-600 text-xs text-white px-3 py-2 rounded"
                       >
                         Save
                       </button>
                     ) : (
                       <button
                         onClick={() => setEditingRow(row.id)}
-                        className="bg-yellow-500 text-white px-3 py-2 rounded"
+                        className="bg-yellow-500 text-xs text-white px-3 py-2 rounded"
                       >
                         Edit
                       </button>
                     )}
                     <button
                       onClick={() => handleDelete(row.id)}
-                      className="bg-red-500 text-white px-3 py-2 rounded"
+                      className="bg-red-500 text-xs text-white px-3 py-2 rounded"
                     >
                       Delete
                     </button>
