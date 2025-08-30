@@ -9,7 +9,9 @@ export default function Navbar() {
   useEffect(() => {
     // ✅ دالة لجلب بيانات المستخدم
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         setUsername(user.user_metadata?.username || user.email);
       } else {
@@ -20,13 +22,17 @@ export default function Navbar() {
     getUser(); // أول مرة
 
     // ✅ listener يتابع أي تغيير في حالة تسجيل الدخول
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setUsername(session.user.user_metadata?.username || session.user.email);
-      } else {
-        setUsername("");
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session?.user) {
+          setUsername(
+            session.user.user_metadata?.username || session.user.email
+          );
+        } else {
+          setUsername("");
+        }
       }
-    });
+    );
 
     // cleanup
     return () => {
@@ -37,6 +43,8 @@ export default function Navbar() {
   // ✅ تسجيل الخروج
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    localStorage.clear();
+    sessionStorage.clear();
     setUsername("");
     navigate("/login");
   };
