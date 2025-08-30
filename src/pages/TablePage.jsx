@@ -168,7 +168,6 @@ export default function TablePage() {
   };
 
   if (loading) return <p>Loading...</p>;
-console.log(columns);
 
   return (
     <div className="p-8">
