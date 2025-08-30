@@ -1,18 +1,15 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import CurrentDate from "./CurrentDate";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [username, setUsername] = useState("");
 
-  useEfuseEffect(() => {
+  useEffect(() => {
+    // ✅ دالة لجلب بيانات المستخدم
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUsername(user.user_metadata?.username || user.email);
       } else {
@@ -20,72 +17,53 @@ export default function Navbar() {
       }
     };
 
-    getUser(); // اول مرة
+    getUser(); // أول مرة
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (session?.user) {
-          setUsername(
-            session.user.user_metadata?.username || session.user.email
-          );
-        } else {
-          setUsername("");
-        }
+    // ✅ listener يتابع أي تغيير في حالة تسجيل الدخول
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUsername(session.user.user_metadata?.username || session.user.email);
+      } else {
+        setUsername("");
       }
-    );
+    });
 
+    // cleanup
     return () => {
       listener.subscription.unsubscribe();
     };
   }, []);
 
+  // ✅ تسجيل الخروج
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    localStorage.clear();
-    sessionStorage.clear();
     setUsername("");
     navigate("/login");
   };
 
-  const hideLogout =
-    location.pathname === "/login" || location.pathname === "/register";
-
   return (
-    <nav className="bg-[#4caf50] text-white p-4">
+    <nav className="bg-gray-800 text-white p-4 shadow-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left side (Logo) */}
         <div className="flex items-center space-x-4">
-          <div className="p-2 rounded-4xl">
-            <Link to="/">
-              <img
-                src="/logo2.png"
-                alt="Logo"
-                className="h-14 w-14 rounded-lg cursor-pointer"
-              />
-            </Link>
-          </div>
+          <Link to="/" className="text-lg font-bold hover:text-gray-300">
+            MyApp
+          </Link>
+          <Link to="/dashboard" className="hover:text-gray-300">
+            Dashboard
+          </Link>
         </div>
-
-        {/* Right side (Welcome + Date + Logout) */}
-        <div className="flex items-center gap-6">
-          {!hideLogout && (
-            <div className="flex flex-col items-end text-right">
-              {username && (
-                <span className="font-semibold text-amber-50 drop-shadow-sm">
-                  Welcome, {username}
-                </span>
-              )}
-              <CurrentDate />
-            </div>
+        <div className="flex items-center space-x-4">
+          {username && (
+            <span className="text-sm font-medium text-green-400">
+              👋 Welcome, {username}
+            </span>
           )}
-          {!hideLogout && (
-            <button
-              onClick={handleLogout}
-              className="bg-[#166534] hover:bg-white hover:text-[#166534] px-4 py-2 rounded"
-            >
-              Logout
-            </button>
-          )}
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-lg text-sm"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </nav>
