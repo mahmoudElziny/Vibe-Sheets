@@ -5,49 +5,42 @@ import { supabase } from "../lib/supabase";
 export default function Navbar() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ دالة لجلب بيانات المستخدم
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    const fetchUser = async () => {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUsername(user.user_metadata?.username || user.email);
       } else {
         setUsername("");
       }
+      setLoading(false);
     };
 
-    getUser(); // أول مرة
+    fetchUser();
 
-    // ✅ listener يتابع أي تغيير في حالة تسجيل الدخول
+    // listener لتغير الحالة
     const { data: subscription } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        // مسح الاسم القديم الأول
+        setLoading(true); // نمسح البيانات القديمة على طول
         setUsername("");
 
         if (session?.user) {
-          // نجيب بيانات المستخدم الجديد من supabase
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-          setUsername(user?.user_metadata?.username || user?.email || "");
+          setUsername(session.user.user_metadata?.username || session.user.email);
         }
+        setLoading(false);
       }
     );
 
-    // cleanup
     return () => {
-      listener.subscription.unsubscribe();
+      subscription?.subscription.unsubscribe();
     };
   }, []);
 
-  // ✅ تسجيل الخروج
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    localStorage.clear();
-    sessionStorage.clear();
     setUsername("");
     navigate("/login");
   };
@@ -64,10 +57,14 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex items-center space-x-4">
-          {username && (
-            <span className="text-sm font-medium text-green-400">
-              👋 Welcome, {username}
-            </span>
+          {loading ? (
+            <span className="text-sm text-gray-400">Loading...</span>
+          ) : (
+            username && (
+              <span className="text-sm font-medium text-green-400">
+                👋 Welcome, {username}
+              </span>
+            )
           )}
           <button
             onClick={handleLogout}
