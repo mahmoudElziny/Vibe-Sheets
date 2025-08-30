@@ -9,16 +9,18 @@ export default function Navbar() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    async function fetchUser() {
+    const getUser = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (user) {
+        // لو عنده username في metadata نعرضه
         setUsername(user.user_metadata?.username || user.email);
       }
-    }
-    fetchUser();
+    };
+
+    getUser();
   }, []);
 
   const handleLogout = async () => {
@@ -32,7 +34,6 @@ export default function Navbar() {
   return (
     <nav className="bg-[#4caf50] text-white p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        
         {/* Left side (Logo) */}
         <div className="flex items-center space-x-4">
           <div className="p-2 rounded-4xl">
