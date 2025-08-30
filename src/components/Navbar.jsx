@@ -8,23 +8,42 @@ export default function Navbar() {
   const location = useLocation();
   const [username, setUsername] = useState("");
 
-  useEffect(() => {
+  useEfuseEffect(() => {
     const getUser = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
       if (user) {
-        // لو عنده username في metadata نعرضه
         setUsername(user.user_metadata?.username || user.email);
+      } else {
+        setUsername("");
       }
     };
 
-    getUser();
+    getUser(); // اول مرة
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session?.user) {
+          setUsername(
+            session.user.user_metadata?.username || session.user.email
+          );
+        } else {
+          setUsername("");
+        }
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    localStorage.clear();
+    sessionStorage.clear();
+    setUsername("");
     navigate("/login");
   };
 
