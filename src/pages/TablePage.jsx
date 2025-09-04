@@ -144,15 +144,15 @@ export default function TablePage() {
   if (loading) return <p>Loading...</p>;
 
 return (
-    <div className="p-8">
+    <div className="p-2">
       <button
         onClick={() => navigate("/")}
-        className="mb-4 bg-gray-300 px-3 py-2 rounded flex items-center gap-2"
+        className="mb-2 bg-gray-300 px-3 py-2 rounded flex items-center gap-2 text-sm"
       >
-        <FaArrowLeft /> ← Back
+        <FaArrowLeft /> Back
       </button>
 
-      <h1 className="text-xl font-bold mb-4 bg-[#4caf50] p-4">
+      <h1 className="text-lg font-bold mb-2 bg-[#4caf50] p-3">
         {tableName.toUpperCase()}
       </h1>
 
