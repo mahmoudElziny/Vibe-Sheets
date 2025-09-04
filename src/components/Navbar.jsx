@@ -54,7 +54,7 @@ export default function Navbar() {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <nav className="bg-[#4caf50] text-white p-4">
+    <nav className="bg-[#4caf50] text-white p-2">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left side (Logo) */}
         <div className="flex items-center space-x-4">
@@ -63,7 +63,7 @@ export default function Navbar() {
               <img
                 src="/logo2.png"
                 alt="Logo"
-                className="h-14 w-14 rounded-lg cursor-pointer"
+                className="h-18 w-16 rounded-lg cursor-pointer"
               />
             </Link>
           </div>
