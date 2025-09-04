@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const sections = ["Accredited Office Review Actions", "On-Hold Actions For Offie Response", "Office Operational Actions"];
+  const sections = ["Accredited Office Review Actions", "On-Hold Actions For Office Response", "Office Operational Actions"];
   const section1 = ["PWS", "SIGNED PROPOSAL", "ASSESSMENT PACKAGE", "ASSESSMENT PACKAGE - Resubmitted", "SURVEILLANCE PACKAGES",
     "SURVEILLANCE PACKAGES - Resubmitted", "EXTRA VISIT PACKAGE", "CLIENT DETAILS CHANGE REQUEST", "SALES TECH CHANGE REQUEST",
   "CERTIFICATES TO PRINT", "STANDARD / CPO APPLICATION", "CODE APPLICATIONS"];
