@@ -35,7 +35,7 @@ return (
                         <Link className="text-gray-800 text-xs font-bold p-1" to={`/table/${item}`}>{item}</Link>
                     </div>
                   ))}
-                  {section === "On-Hold Actions For Offie Response" && section2.map((item) => (
+                  {section === "On-Hold Actions For Office Response" && section2.map((item) => (
                     <div key={item} className="mb-2 bg-white rounded text-left hover:bg-gray-200 cursor-pointer" onClick={() => handleClick(item)}>    
                         <Link className="text-gray-800 text-xs font-bold p-1" to={`/table/${item}`}>{item}</Link>
                     </div>
