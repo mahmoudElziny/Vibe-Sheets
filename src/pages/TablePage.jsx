@@ -2,6 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { supabase } from "../lib/supabase";
+import { FaEdit, FaTrash, FaPlus, FaSave, FaArrowLeft } from 'react-icons/fa';
+
 
 export default function TablePage() {
   const { tableName } = useParams();
@@ -11,7 +13,6 @@ export default function TablePage() {
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingRow, setEditingRow] = useState(null);
-
 
   // Fetch columns
   useEffect(() => {
@@ -121,34 +122,7 @@ export default function TablePage() {
     }
 
     toast.success("Changes saved");
-  };
-
-  // Save a single row
-  const handleSaveRow = async (row) => {
-    if (!row.id) {
-      toast.error("Row must be saved first with Save All");
-      return;
-    }
-
-    const payload = {};
-    columns.forEach((col) => {
-      if (col !== "tracking_no") {
-        payload[col] = row[col];
-      }
-    });
-
-    const { error } = await supabase
-      .from(tableName)
-      .update(payload)
-      .eq("id", row.id);
-
-    if (error) {
-      console.error(error);
-      toast.error("Error updating row " + row.id);
-    } else {
-      toast.success("Row updated");
-      setEditingRow(null);
-    }
+    setEditingRow(null); // الخروج من وضع التعديل بعد الحفظ
   };
 
   // Delete row
@@ -169,13 +143,13 @@ export default function TablePage() {
 
   if (loading) return <p>Loading...</p>;
 
-  return (
+return (
     <div className="p-8">
       <button
         onClick={() => navigate("/")}
-        className="mb-4 bg-gray-300 px-3 py-1 rounded"
+        className="mb-4 bg-gray-300 px-3 py-2 rounded flex items-center gap-2"
       >
-        ← Back
+        <FaArrowLeft /> ← Back
       </button>
 
       <h1 className="text-xl font-bold mb-4 bg-[#4caf50] p-4">
@@ -187,9 +161,9 @@ export default function TablePage() {
           <p className="mb-4">No data in {tableName}</p>
           <button
             onClick={handleInsert}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
           >
-            Insert new row
+            <FaPlus /> Insert new row
           </button>
         </div>
       ) : (
@@ -200,9 +174,15 @@ export default function TablePage() {
                 {columns.map((col) => (
                   <th
                     key={col}
-                    className= "px-3 py-2 border text-xs text-left break-words whitespace-normal"
-                    style={{ maxWidth: col === "tracking_no" ? "60px" : "200px", minWidth: col === "tracking_no" ? "60px" : 
-                      col === "company_name" ? "180px" : "120px"
+                    className="px-3 py-2 border text-xs text-left break-words whitespace-normal"
+                    style={{
+                      maxWidth: col === "tracking_no" ? "60px" : "200px",
+                      minWidth:
+                        col === "tracking_no"
+                          ? "60px"
+                          : col === "company_name"
+                          ? "180px"
+                          : "120px",
                     }}
                   >
                     {col.toUpperCase().replace(/_/g, "\n")}
@@ -230,7 +210,7 @@ export default function TablePage() {
                           onChange={(e) =>
                             handleChange(idx, col, e.target.value)
                           }
-                          disabled={editingRow !== row.id}
+                          disabled={row.id && editingRow !== row.id}
                           className="w-full border px-3 py-2 rounded text-xs"
                         />
                       ) : (
@@ -240,33 +220,28 @@ export default function TablePage() {
                           onChange={(e) =>
                             handleChange(idx, col, e.target.value)
                           }
-                          disabled={editingRow !== row.id}
+                          disabled={row.id && editingRow !== row.id}
                           className="w-full border px-3 py-2 rounded text-xs"
                         />
                       )}
                     </td>
                   ))}
                   <td className="p-2 border flex gap-2">
-                    {editingRow === row.id ? (
-                      <button
-                        onClick={() => handleSaveRow(row)}
-                        className="bg-blue-600 text-xs text-white px-3 py-2 rounded"
-                      >
-                        Save
-                      </button>
-                    ) : (
+                    {row.id && ( // عرض زر Edit فقط للصفوف الموجودة في DB
                       <button
                         onClick={() => setEditingRow(row.id)}
-                        className="bg-yellow-500 text-xs text-white px-3 py-2 rounded"
+                        className="bg-yellow-500 text-white p-2 rounded flex items-center justify-center"
+                        title="Edit"
                       >
-                        Edit
+                        <FaEdit size={14} />
                       </button>
                     )}
                     <button
                       onClick={() => handleDelete(row.id)}
-                      className="bg-red-500 text-xs text-white px-3 py-2 rounded"
+                      className="bg-red-500 text-white p-2 rounded flex items-center justify-center"
+                      title="Delete"
                     >
-                      Delete
+                      <FaTrash size={14} />
                     </button>
                   </td>
                 </tr>
@@ -277,15 +252,15 @@ export default function TablePage() {
           <div className="mt-4 flex gap-2">
             <button
               onClick={handleInsert}
-              className="bg-green-500 text-white px-4 py-2 rounded"
+              className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
             >
-              Insert new row
+              <FaPlus /> Insert new row
             </button>
             <button
               onClick={handleSaveAll}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
             >
-              Save All
+              <FaSave /> Save
             </button>
           </div>
         </>
