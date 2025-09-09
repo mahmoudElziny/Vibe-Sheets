@@ -171,7 +171,7 @@ export default function TablePage() {
             <thead>
               <tr className="bg-[#4caf50]">
                 {columns.map((col) => (
-                  <th
+                  col == "created_at" ? '' : <th
                     key={col}
                     className="px-3 py-2 border text-xs text-left break-words whitespace-normal"
                     style={{
@@ -194,6 +194,7 @@ export default function TablePage() {
               {rows.map((row, idx) => (
                 <tr key={row.id || idx}>
                   {columns.map((col) => (
+                    col == "created_at" ? '' :
                     <td key={col} className="p-2 border bg-amber-50">
                       {
                         /* {col === "tracking_no" ? (
