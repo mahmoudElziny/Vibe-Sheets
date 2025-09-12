@@ -19,8 +19,8 @@ export default function Home() {
   };
 
 return (
-  <div>
-    <div className="p-8">
+  <div className="max-w-6xl mx-auto p-8">
+    <div>
       <div className="flex justify-center items-center gap-3">
         {sections.map((section) => (
           <div

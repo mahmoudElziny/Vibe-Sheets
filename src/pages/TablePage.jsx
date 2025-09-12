@@ -143,7 +143,7 @@ export default function TablePage() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="p-2">
+    <div className="max-w-7xl mx-auto p-4">
       <button
         onClick={() => navigate("/")}
         className="mb-2 bg-gray-300 px-3 py-2 rounded flex items-center gap-2 text-sm"
