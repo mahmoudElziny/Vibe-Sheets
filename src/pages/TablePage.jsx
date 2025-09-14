@@ -5,8 +5,11 @@ import { supabase } from "../lib/supabase";
 import { FaEdit, FaTrash, FaPlus, FaSave, FaArrowLeft } from "react-icons/fa";
 
 export default function TablePage() {
-  const { tableName } = useParams();
+  const { tableName: rawTableName } = useParams();
   const navigate = useNavigate();
+
+  // نحول اسم الجدول من ال UI إلى الشكل المناسب لـ Supabase
+  const tableName = rawTableName.toLowerCase().replace(/[\s-]+/g, "_");
 
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
@@ -76,11 +79,7 @@ export default function TablePage() {
       const payload = newRows.map((row) => {
         const cleanRow = {};
         columns.forEach((col) => {
-          if (
-            // col !== "tracking_no" &&
-            row[col] !== undefined &&
-            row[col] !== ""
-          ) {
+          if (row[col] !== undefined && row[col] !== "") {
             cleanRow[col] = row[col];
           }
         });
@@ -104,9 +103,7 @@ export default function TablePage() {
     for (const row of existingRows) {
       const payload = {};
       columns.forEach((col) => {
-        // if (col !== "tracking_no") {
         payload[col] = row[col];
-        // }
       });
 
       const { error } = await supabase
@@ -152,12 +149,12 @@ export default function TablePage() {
       </button>
 
       <h1 className="text-lg font-bold mb-2 bg-[#4caf50] p-3">
-        {tableName.toUpperCase()}
+        {rawTableName.toUpperCase()}
       </h1>
 
       {rows.length === 0 ? (
         <div>
-          <p className="mb-4">No data in {tableName}</p>
+          <p className="mb-4">No data in {rawTableName}</p>
           <button
             onClick={handleInsert}
             className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
@@ -170,68 +167,62 @@ export default function TablePage() {
           <table className="w-full border">
             <thead>
               <tr className="bg-[#4caf50]">
-                {columns.map((col) => (
-                  col == "created_at" ? '' : <th
-                    key={col}
-                    className="px-3 py-2 border text-xs text-left break-words whitespace-normal"
-                    style={{
-                      maxWidth: col === "tracking_no" ? "80px" : "200px",
-                      minWidth:
-                        col === "tracking_no"
-                          ? "80px"
-                          : col === "company_name"
-                          ? "180px"
-                          : "120px",
-                    }}
-                  >
-                    {col.toUpperCase().replace(/_/g, "\n")}
-                  </th>
-                ))}
+                {columns.map(
+                  (col) =>
+                    col !== "created_at" && (
+                      <th
+                        key={col}
+                        className="px-3 py-2 border text-xs text-left break-words whitespace-normal"
+                        style={{
+                          maxWidth: col === "tracking_no" ? "80px" : "200px",
+                          minWidth:
+                            col === "tracking_no"
+                              ? "80px"
+                              : col === "company_name"
+                              ? "180px"
+                              : "120px",
+                        }}
+                      >
+                        {col.toUpperCase().replace(/_/g, "\n")}
+                      </th>
+                    )
+                )}
                 <th className="p-3 border">Actions</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, idx) => (
                 <tr key={row.id || idx}>
-                  {columns.map((col) => (
-                    col == "created_at" ? '' :
-                    <td key={col} className="p-2 border bg-amber-50">
-                      {
-                        /* {col === "tracking_no" ? (
-                        <input
-                          type="text"
-                          value={row[col] || ""}
-                          // disabled
-                          disabled={row.id && editingRow !== row.id}
-                          className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm"
-                        />
-                      ) : */
-                        col.toLowerCase().includes("date") ? (
-                          <input
-                            type="date"
-                            value={row[col] || ""}
-                            onChange={(e) =>
-                              handleChange(idx, col, e.target.value)
-                            }
-                            disabled={row.id && editingRow !== row.id}
-                            className="w-full border px-3 py-2 rounded text-xs"
-                          />
-                        ) : (
-                          <input
-                            type="text"
-                            value={row[col] || ""}
-                            onChange={(e) =>
-                              handleChange(idx, col, e.target.value)
-                            }
-                            disabled={row.id && editingRow !== row.id}
-                            className="w-full border px-3 py-2 rounded text-xs"
-                          />
-                        )
-                      }
-                    </td>
-                  ))}
+                  {columns.map(
+                    (col) =>
+                      col !== "created_at" && (
+                        <td key={col} className="p-2 border bg-amber-50">
+                          {col.toLowerCase().includes("date") ? (
+                            <input
+                              type="date"
+                              value={row[col] || ""}
+                              onChange={(e) =>
+                                handleChange(idx, col, e.target.value)
+                              }
+                              disabled={row.id && editingRow !== row.id}
+                              className="w-full border px-3 py-2 rounded text-xs"
+                            />
+                          ) : (
+                            <input
+                              type="text"
+                              value={row[col] || ""}
+                              onChange={(e) =>
+                                handleChange(idx, col, e.target.value)
+                              }
+                              disabled={row.id && editingRow !== row.id}
+                              className="w-full border px-3 py-2 rounded text-xs"
+                            />
+                          )}
+                        </td>
+                      )
+                  )}
                   <td className="p-2 border flex gap-2">
-                    {row.id && ( // عرض زر Edit فقط للصفوف الموجودة في DB
+                    {row.id && (
                       <button
                         onClick={() => setEditingRow(row.id)}
                         className="bg-yellow-500 text-white p-2 rounded flex items-center justify-center"
